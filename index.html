@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TodoList</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1 class="header__title">To Do list</h1>
+      <div class="header__stats">
+        <div class="header__info">
+          <p class="header__info-title">Scope</p>
+          <p class="header__info-text" id="scope"></p>
+        </div>
+        <div class="header__info">
+          <p class="header__info-title">Active</p>
+          <p class="header__info-text" id="active"></p>
+        </div>
+        <div class="header__info">
+          <p class="header__info-title">Successful</p>
+          <p class="header__info-text" id="successful"></p>
+        </div>
+      </div>
+      <div class="header__button button button-add"></div>
+    </div>
+  </header>
+
+  <section class="todos">
+    <div class="container">
+      <div class="todos__list"></div>
+    </div>
+  </section>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
