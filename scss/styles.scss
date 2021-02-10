@@ -17,6 +17,7 @@ body {
 }
 
 .button-approve,
+.button-edit,
 .button-remove {
   font-size: 18px;
   color: #afafaf;
@@ -27,7 +28,8 @@ body {
   }
 }
 
-.button-approve {
+.button-approve,
+.button-edit {
   margin-right: 17px;
 }
 
@@ -96,6 +98,14 @@ body {
 
   &__item {
     border-bottom: 1px solid #c7c7c7;
+    margin-bottom: 20px;
+
+    &--completed {
+      .todos__item-input {
+        text-decoration: line-through;
+        color: #bbb;
+      }
+    }
   }
 
   &__item-actions {

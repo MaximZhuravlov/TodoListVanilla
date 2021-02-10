@@ -20,6 +20,7 @@ body {
 }
 
 .button-approve,
+.button-edit,
 .button-remove {
   font-size: 18px;
   color: #afafaf;
@@ -28,11 +29,13 @@ body {
 }
 
 .button-approve:hover,
+.button-edit:hover,
 .button-remove:hover {
   color: #889dea;
 }
 
-.button-approve {
+.button-approve,
+.button-edit {
   margin-right: 17px;
 }
 
@@ -108,6 +111,12 @@ body {
 
 .todos__item {
   border-bottom: 1px solid #c7c7c7;
+  margin-bottom: 20px;
+}
+
+.todos__item--completed .todos__item-input {
+  text-decoration: line-through;
+  color: #bbb;
 }
 
 .todos__item-actions {
