@@ -12,29 +12,34 @@
 </head>
 <body>
   <header class="header">
-    <div class="container">
-      <h1 class="header__title">To Do list</h1>
-      <div class="header__stats">
-        <div class="header__info">
-          <p class="header__info-title">Scope</p>
-          <p class="header__info-text" id="scope"></p>
+    <div class="header__wrapper">
+      <div class="container">
+        <h1 class="header__title">To Do list</h1>
+        <div class="header__stats">
+          <div class="header__info">
+            <p class="header__info-title">Scope</p>
+            <p class="header__info-text" id="scope"></p>
+          </div>
+          <div class="header__info">
+            <p class="header__info-title">Active</p>
+            <p class="header__info-text" id="active"></p>
+          </div>
+          <div class="header__info">
+            <p class="header__info-title">Successful</p>
+            <p class="header__info-text" id="successful"></p>
+          </div>
         </div>
-        <div class="header__info">
-          <p class="header__info-title">Active</p>
-          <p class="header__info-text" id="active"></p>
-        </div>
-        <div class="header__info">
-          <p class="header__info-title">Successful</p>
-          <p class="header__info-text" id="successful"></p>
-        </div>
+        <button class="header__button button button-add"></button>
       </div>
-      <div class="header__button button button-add"></div>
     </div>
   </header>
 
   <section class="todos">
-    <div class="container">
+    <div class="todos__container container">
       <div class="todos__list"></div>
+      <button class="todos__button button button-add" type="button">
+        Create new task
+      </button>
     </div>
   </section>
 

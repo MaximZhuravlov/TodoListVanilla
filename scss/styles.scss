@@ -1,9 +1,13 @@
-@import "reset";
-@import "vars";
+@import "utils/reset";
+@import "utils/vars";
+
+@import "components/header";
+@import "components/todos";
 
 body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
+  background-color: $violet;
 }
 
 .container {
@@ -14,6 +18,12 @@ body {
 
 .button {
   cursor: pointer;
+  display: block;
+}
+
+.fas,
+.far {
+  display: inline-block;
 }
 
 .button-approve,
@@ -33,128 +43,8 @@ body {
   margin-right: 17px;
 }
 
-.header {
-  background-color: $violet;
-  border-bottom-right-radius: 41px;
-  padding-top: 8px;
-
-  &__title {
-    text-align: center;
-    font-size: 24px;
-    line-height: percentage($number: 32px / 24px);
-    font-weight: 900;
-    color: #fff;
-    margin-bottom: 32px;
-  }
-
-  &__stats {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 38px;
-  }
-
-  &__info-title {
-    color: #fff;
-    font-size: 12px;
-    line-height: percentage($number: 16px / 12px);
-    margin-bottom: 12px;
-  }
-
-  &__info-text {
-    font-size: 56px;
-    line-height: 1;
-    font-weight: 600;
-    color: #fefefe;
-    text-align: center;
-  }
-
-  &__button {
-    width: 48px;
-    height: 48px;
-    background-color: $primary-green;
-    border: none;
-    outline: none;
-    border-radius: 11px;
-    transform: rotate(45deg);
-    position: relative;
-    top: 23px;
-    margin: 0 auto;
-
-    &::before {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-45deg);
-      content: "";
-      width: 36px;
-      height: 36px;
-      background-image: url(../img/plus.svg);
-    }
-  }
-}
-
-.todos {
-  padding-top: 86px;
-
-  &__item {
-    border-bottom: 1px solid #c7c7c7;
-    margin-bottom: 20px;
-
-    &--completed {
-      .todos__item-input {
-        text-decoration: line-through;
-        color: #bbb;
-      }
-    }
-  }
-
-  &__item-actions {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &__item-left {
-    display: flex;
-    align-items: center;
-  }
-
-  &__item-checkbox {
-    width: 18px;
-    height: 18px;
-    border: 1px solid $violet;
-    margin-left: 0;
-  }
-
-  &__item-date {
-    color: $violet;
-    padding-left: 5px;
-    font-size: 12px;
-    line-height: percentage($number: 16px / 12px);
-  }
-
-  &__item-right {
-    margin-right: 32px;
-  }
-
-  &__item-input {
-    width: 85%;
-    outline: none;
-    border: none;
-    padding-left: 26px;
-    font-size: 14px;
-    line-height: percentage($number: 22px / 14px);
-    color: #3f3f3f;
-
-    &:disabled {
-      background-color: white;
-    }
-
-    &::placeholder {
-      font-size: 14px;
-      line-height: percentage($number: 22px / 14px);
-      color: #bbb;
-      font-family: "Poppins", sans-serif;
-      font-weight: 400;
-    }
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
   }
 }

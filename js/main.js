@@ -6,10 +6,14 @@ let state = 'reading';
 let addingNewTodo = false;
 let editingTodo = false;
 
+// data to be stored during editing
+let storedData = {};
+
 const scope = document.getElementById('scope');
 const active = document.getElementById('active');
 const successful = document.getElementById('successful');
 const todosList = document.querySelector('.todos__list');
+const addButtons = document.querySelectorAll('.button-add');
 
 scope.innerText = 0;
 active.innerText = 0;
@@ -20,8 +24,13 @@ if (localStorage.getItem('todos')) {
   const todosFromStorage = JSON.parse(localStorage.getItem('todos'));
 
   scope.innerText = todosFromStorage.length;
+  active.innerText = todosFromStorage.filter(todo => !todo.isCompleted).length;
+  successful.innerText
+    = todosFromStorage.filter(todo => todo.isCompleted).length;
 
   todosFromStorage.forEach(todo => addTodo(todo.name, todo.date, todo.isCompleted));
+} else {
+  alertEmpty('There are no todos yet');
 }
 
 /**
@@ -68,19 +77,17 @@ function addTodo(name, date, isCompleted) {
 
   // Add and remove button
   const editButton = document.createElement('i');
-  editButton.classList.add('fas', 'fa-edit', 'button', 'button-edit');
+  editButton.classList.add('far', 'fa-edit', 'button', 'button-edit');
   const removeButton = document.createElement('i');
   removeButton.classList.add('far', 'fa-trash-alt', 'button', 'button-remove');
   buttonsContainer.appendChild(editButton);
   buttonsContainer.appendChild(removeButton);
 
   // Adding input
-  const todosItemInput = document.createElement('input');
+  const todosItemInput = document.createElement('textarea');
   todosItemInput.classList.add('todos__item-input');
-  todosItemInput.type = 'text';
   todosItemInput.value = name;
   todosItemInput.placeholder = 'Please enter task description';
-  todosItemInput.autocomplete = "off";
   todosItemInput.disabled = true;
 
   todosItem.appendChild(todosItemActions);
@@ -119,73 +126,105 @@ function removeFromLocalStorage(name, date, isCompleted) {
   if (todos.length !== 0) {
     localStorage.setItem('todos', JSON.stringify(todos));
   } else {
+    alertEmpty('There are no todos yet');
     localStorage.clear();
   }
 }
 
-function editInLocalStorage() {}
+/**
+ * Updates todo in the local storage.
+ * @param {object} todo todo to be updated.
+ * @param {object} newData new data to be assigned to the todo.
+ */
+function updateInLocalStorage(todo, newData) {
+  const todos = JSON.parse(localStorage.getItem('todos'));
+  const index = todos.findIndex(item => item.name === todo.name && item.date === todo.date && item.isCompleted === todo.isCompleted);
 
-document.querySelector('.button-add').addEventListener('click', event => {
-  if (state === 'reading') {
-    state = 'adding new todo';
-    addingNewTodo = true;
-    const todosItem = document.createElement('div');
-    todosItem.classList.add('todos__item', 'todos__item--active');
-  
-    const todosItemActions = document.createElement('div');
-    todosItemActions.classList.add('todos__item-actions');
-
-    // Adding container for checkbox and date
-    const dateCheckboxContainer = document.createElement('div');
-    dateCheckboxContainer.classList.add('todos__item-left');
-    todosItemActions.appendChild(dateCheckboxContainer);
-
-    // Adding checkbox
-    const inputCheckbox = document.createElement('input');
-    inputCheckbox.classList.add('todos__item-checkbox');
-    inputCheckbox.type = 'checkbox';
-    inputCheckbox.disabled = true;
-    dateCheckboxContainer.appendChild(inputCheckbox);
-
-    // Adding date
-    const now = new Date();
-    const date = document.createElement('span');
-    date.classList.add('todos__item-date');
-    date.innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-    dateCheckboxContainer.appendChild(date);
-
-    // Adding container for buttons
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.classList.add('todos__item-right');
-    todosItemActions.appendChild(buttonsContainer);
-
-    // Add and remove button
-    const addButton = document.createElement('i');
-    addButton.classList.add('fas', 'fa-check', 'button', 'button-approve');
-    const removeButton = document.createElement('i');
-    removeButton.classList.add('far', 'fa-trash-alt', 'button', 'button-remove');
-    buttonsContainer.appendChild(addButton);
-    buttonsContainer.appendChild(removeButton);
-  
-    // Adding input
-    const todosItemInput = document.createElement('input');
-    todosItemInput.classList.add('todos__item-input');
-    todosItemInput.type = 'text';
-    todosItemInput.id = 'new-todo';
-    todosItemInput.placeholder = 'Please enter task description';
-    todosItemInput.autocomplete = "off";
-  
-    todosItem.appendChild(todosItemActions);
-    todosItem.appendChild(todosItemInput);
-    todosList.appendChild(todosItem);
-
-    document.getElementById('new-todo').focus();
+  if (index !== -1) {
+    todos.splice(index, 1, newData);
   }
 
-  if (state === 'adding new todo') {
-    document.getElementById('new-todo').focus();
-  }
-});
+  localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+/**
+ * Show text indicating there are no todos in the storage.
+ * @param {string} message text of the message.
+ */
+function alertEmpty(message) {
+  document.querySelector('.todos__container').insertAdjacentHTML('afterbegin', 
+    `
+    <p class="todos__empty">${message}</p>
+    `
+  );
+}
+
+for (const button of addButtons) {
+  button.addEventListener('click', event => {
+    if (state === 'reading') {
+      state = 'adding new todo';
+      addingNewTodo = true;
+  
+      const todosItem = document.createElement('div');
+      todosItem.classList.add('todos__item', 'todos__item--active');
+    
+      const todosItemActions = document.createElement('div');
+      todosItemActions.classList.add('todos__item-actions');
+  
+      // Adding container for checkbox and date
+      const dateCheckboxContainer = document.createElement('div');
+      dateCheckboxContainer.classList.add('todos__item-left');
+      todosItemActions.appendChild(dateCheckboxContainer);
+  
+      // Adding checkbox
+      const inputCheckbox = document.createElement('input');
+      inputCheckbox.classList.add('todos__item-checkbox');
+      inputCheckbox.type = 'checkbox';
+      inputCheckbox.disabled = true;
+      dateCheckboxContainer.appendChild(inputCheckbox);
+  
+      // Adding date
+      const now = new Date();
+      const date = document.createElement('span');
+      date.classList.add('todos__item-date');
+      date.innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+      dateCheckboxContainer.appendChild(date);
+  
+      // Adding container for buttons
+      const buttonsContainer = document.createElement('div');
+      buttonsContainer.classList.add('todos__item-right');
+      todosItemActions.appendChild(buttonsContainer);
+  
+      // Add and remove button
+      const addButton = document.createElement('i');
+      addButton.classList.add('fas', 'fa-check', 'button', 'button-approve');
+      const removeButton = document.createElement('i');
+      removeButton.classList.add('far', 'fa-trash-alt', 'button', 'button-remove');
+      buttonsContainer.appendChild(addButton);
+      buttonsContainer.appendChild(removeButton);
+    
+      // Adding input
+      const todosItemInput = document.createElement('textarea');
+      todosItemInput.classList.add('todos__item-input');
+      todosItemInput.id = 'new-todo';
+      todosItemInput.placeholder = 'Please enter task description';
+    
+      todosItem.appendChild(todosItemActions);
+      todosItem.appendChild(todosItemInput);
+      todosList.appendChild(todosItem);
+  
+      document.getElementById('new-todo').focus();
+
+      if (document.querySelector('.todos__empty')) {
+        document.querySelector('.todos__empty').remove();
+      }      
+    }
+  
+    if (addingNewTodo) {
+      document.getElementById('new-todo').focus();
+    }
+  });
+}
 
 todosList.addEventListener('click', event => {
   // Approving button
@@ -193,8 +232,11 @@ todosList.addEventListener('click', event => {
     const inputField = event.target.parentElement.parentElement.parentElement.querySelector('.todos__item-input');
     const checkboxField = event.target.parentElement.parentElement.querySelector('.todos__item-checkbox');
 
-    if (state === 'adding new todo') {
+    if (addingNewTodo) {
       if (inputField.value.trim() !== '') {
+        if (inputField.classList.contains('todos__item-input--warning')) {
+          inputField.classList.remove('todos__item-input--warning');
+        }
         // Disable input
         inputField.disabled = true;
   
@@ -219,11 +261,17 @@ todosList.addEventListener('click', event => {
         );
 
         addingNewTodo = false;
+      } else {
+        inputField.classList.add('todos__item-input--warning');
       }
     }
 
     if (state === 'editing') {
       if (inputField.value.trim() !== '') {
+        if (inputField.classList.contains('todos__item-input--warning')) {
+          inputField.classList.remove('todos__item-input--warning');
+        }
+
         event.target.classList.remove('fas', 'fa-check', 'button-approve');
         event.target.classList.add('far', 'fa-edit', 'button-edit');
 
@@ -234,6 +282,14 @@ todosList.addEventListener('click', event => {
         checkboxField.disabled = false;
 
         editingTodo = false;
+
+        updateInLocalStorage(storedData, {
+          name: inputField.value,
+          date: storedData.date,
+          isCompleted: checkboxField.checked
+        });
+      } else {
+        inputField.classList.add('todos__item-input--warning');
       }
     }
   }
@@ -271,6 +327,12 @@ todosList.addEventListener('click', event => {
       editingTodo = true;
 
       const todosItem = event.target.closest('.todos__item');
+      storedData = {
+        name: todosItem.querySelector('.todos__item-input').value,
+        date: todosItem.querySelector('.todos__item-date').innerText,
+        isCompleted: todosItem.querySelector('.todos__item-checkbox').checked,
+      };
+
       todosItem.querySelector('.todos__item-checkbox').disabled = true;
       todosItem.querySelector('.todos__item-input').disabled = false;
       todosItem.querySelector('.todos__item-input').focus();
@@ -286,6 +348,16 @@ todosList.addEventListener('click', event => {
   // Checkbox
   if (event.target.classList.contains('todos__item-checkbox')) {
     const todosItem = event.target.closest('.todos__item');
+
+    updateInLocalStorage({
+      name: todosItem.querySelector('.todos__item-input').value,
+      date: todosItem.querySelector('.todos__item-date').innerText,
+      isCompleted: !event.target.checked
+    }, {
+      name: todosItem.querySelector('.todos__item-input').value,
+      date: todosItem.querySelector('.todos__item-date').innerText,
+      isCompleted: event.target.checked
+    });
 
     if (event.target.checked) {
       todosItem.classList.remove('todos__item--active');
